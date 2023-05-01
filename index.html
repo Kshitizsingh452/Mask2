@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Codeboard Online IDE</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <div class="header"> Codeboard Online IDE </div>
+    <div class="control-panel">
+        Select Language:
+        &nbsp; &nbsp;
+        <select id="languages" class="languages" onchange="changeLanguage()">
+            <option value="c"> C </option>
+            <option value="cpp"> C++ </option>
+            <option value="php"> PHP </option>
+            <option value="python"> Python </option>
+            <option value="node"> Node JS </option>
+        </select>
+    </div>
+    <!-- <div>hi</div> -->
+    <div class="Codes" style="color: white;">
+        <div class="lexi">
+        #include <string.h>
+        #include <ctype.h>
+        #include <stdio.h>
+
+int main()
+{
+    FILE *f1;
+    char c, str[10];
+    int lineno = 1, num = 0, i = 0;
+    
+    printf("\nEnter the C program\n");
+    f1 = fopen("input.txt", "w");
+    while ((c = getchar()) != EOF)
+        putc(c, f1);
+    fclose(f1);
+    
+    f1 = fopen("input.txt", "r");
+    while ((c = getc(f1)) != EOF)
+    {
+        if (isdigit(c)) // to recognize numbers
+        {
+            num = c - '0';
+            c = getc(f1);
+            while (isdigit(c))
+            {
+                num = num * 10 + (c - '0');
+                c = getc(f1);
+            }
+            printf("%d is a number \n", num);
+            ungetc(c, f1);
+        }
+        else if (isalpha(c)) // to recognize keywords and identifiers
+        {
+            str[i++] = c;
+            c = getc(f1);
+            while (isdigit(c) || isalpha(c) || c == '_' || c == '$')
+            {
+                str[i++] = c;
+                c = getc(f1);
+            }
+            str[i++] = '\0';
+            if (strcmp("for", str) == 0 || strcmp("while", str) == 0 || strcmp("do", str) == 0 || strcmp("int", str) == 0 || strcmp("float", str) == 0 || strcmp("char", str) == 0 || strcmp("double", str) == 0 || strcmp("static", str) == 0 || strcmp("switch", str) == 0 || strcmp("case", str) == 0) // type 32 keywords
+                printf("%s is a keyword\n", str);
+            else
+                printf("%s is an identifier\n", str);
+            ungetc(c, f1);
+            i = 0;
+        }
+        else if (c == ' ' || c == '\t') // to ignore spaces
+            continue;
+        else if (c == '\n') // to count line number
+            lineno++;
+        else // to find special symbols
+            printf("%c is a special symbol\n", c);
+    }
+    printf("Total no. of lines are: %d\n", lineno);
+    fclose(f1);
+}
+
+        </div>
+        <div class="Comment">
+            
+comments code
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to check if the given
+// string is a comment or not
+void isComment(string line)
+{
+
+	// If two continuous slashes
+	// precedes the comment
+	if (line.size()>=2 && line[0] == '/' && line[1] == '/') {
+
+		cout << "It is a single-line comment";
+		return;
+	}
+
+	if (line.size()>=4 && line[line.size() - 2] == '*'
+		&& line[line.size() - 1] == '/' && line[0] == '/' && line[1] == '*') {
+
+		cout << "It is a multi-line comment";
+		return;
+	}
+
+	cout << "It is not a comment";
+}
+
+// Driver Code
+int main()
+{
+	// Given string
+	string line = "/*kshitiz*/";
+
+	// Function call to check whether then
+	// given string is a comment or not
+	isComment(line);
+
+	return 0;
+}
+
+        </div>
+        <div class="flex" >
+            /*** Definition Section has one variable
+which can be accessed inside yylex()
+and main() ***/
+%{
+int count = 0;
+%}
+
+/*** Rule Section has three rules, first rule
+matches with capital letters, second rule
+matches with any character except newline and
+third rule does not take input after the enter***/
+%%
+[A-Z] {printf("%s capital letter\n", yytext);
+	count++;}
+.	 {printf("%s not a capital letter\n", yytext);}
+\n {return 0;}
+%%
+
+/*** Code Section prints the number of
+capital letter present in the given input***/
+int yywrap(){}
+int main(){
+
+// Explanation:
+// yywrap() - wraps the above rule section
+/* yyin - takes the file pointer
+		which contains the input*/
+/* yylex() - this is the main flex function
+		which runs the Rule Section*/
+// yytext is the text in the buffer
+
+// Uncomment the lines below
+// to take input from file
+// FILE *fp;
+// char filename[50];
+// printf("Enter the filename: \n");
+// scanf("%s",filename);
+// fp = fopen(filename,"r");
+// yyin = fp;
+
+yylex();
+printf("\nNumber of Capital letters "
+	"in the given input - %d\n", count);
+
+return 0;
+}
+
+        </div>
+        
+        <div class="identifier"> 
+            #include <stdio.h>
+#include <conio.h>
+#include <string.h>
+
+int main() {
+    char s[20], c;
+    int state = 0, i = 0;
+
+    clrscr();
+
+    printf("Enter a string: ");
+    gets(s);
+
+    while (s[i] != '\0') {
+        c = s[i++];
+
+        switch (state) {
+            case 0:
+                if (c == 'a')
+                    state = 1;
+                else if (c == 'b')
+                    state = 2;
+                else
+                    state = 6;
+                break;
+            case 1:
+                if (c == 'a')
+                    state = 3;
+                else if (c == 'b')
+                    state = 4;
+                else
+                    state = 6;
+                break;
+            case 2:
+                if (c == 'a')
+                    state = 6;
+                else if (c == 'b')
+                    state = 2;
+                else
+                    state = 6;
+                break;
+            case 3:
+                if (c == 'a')
+                    state = 3;
+                else if (c == 'b')
+                    state = 2;
+                else
+                    state = 6;
+                break;
+            case 4:
+                if (c == 'a')
+                    state = 6;
+                else if (c == 'b')
+                    state = 5;
+                else
+                    state = 6;
+                break;
+            case 5:
+                if (c == 'a')
+                    state = 6;
+                else if (c == 'b')
+                    state = 2;
+                else
+                    state = 6;
+                break;
+            case 6:
+                printf("\n%s is not recognized.", s);
+                getch();
+                return 0;
+        }
+    }
+
+    if (state == 1)
+        printf("\n%s is accepted under rule 'a'", s);
+    else if (state == 2 || state == 4)
+        printf("\n%s is accepted under rule 'a*b+'", s);
+    else if (state == 5)
+        printf("\n%s is accepted under rule 'abb'", s);
+
+    getch();
+    return 0;
+}
+
+        </div >
+        <div class="recognise">
+
+        </div>
+        <div class="ll1">
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+
+void followfirst(char , int , int);
+void findfirst(char , int , int);
+void follow(char c);
+
+int count,n=0;
+char calc_first[10][100];
+char calc_follow[10][100];
+int m=0;
+char production[10][10], first[10];
+char f[10];
+int k;
+char ck;
+int e;
+
+int main(int argc,char **argv)
+{
+	int jm=0;
+	int km=0;
+	int i,choice;
+	char c,ch;
+	printf("How many productions ? :");
+	scanf("%d",&count);
+	printf("\nEnter %d productions in form A=B where A and B are grammar symbols :\n\n",count);
+	for(i=0;i<count;i++)
+	{	
+		scanf("%s%c",production[i],&ch);
+	}
+	int kay;
+	char done[count];
+	int ptr = -1;
+	for(k=0;k<count;k++){
+		for(kay=0;kay<100;kay++){
+			calc_first[k][kay] = '!';
+		}
+	}
+	int point1 = 0,point2,xxx;
+	for(k=0;k<count;k++)
+	{
+		c=production[k][0];
+		point2 = 0;
+		xxx = 0;
+		for(kay = 0; kay <= ptr; kay++)
+			if(c == done[kay])
+				xxx = 1;
+		if (xxx == 1)
+			continue;
+		findfirst(c,0,0);
+		ptr+=1;
+		done[ptr] = c;
+		printf("\n First(%c)= { ",c);
+		calc_first[point1][point2++] = c;
+		for(i=0+jm;i<n;i++){
+			int lark = 0,chk = 0;
+  			for(lark=0;lark<point2;lark++){
+  				if (first[i] == calc_first[point1][lark]){
+  					chk = 1;
+  					break;
+				}
+			}
+			if(chk == 0){
+  		 		printf("%c, ",first[i]);
+  				calc_first[point1][point2++] = first[i];
+			}
+		}
+		printf("}\n");
+		jm=n;
+		point1++;
+	}
+	printf("\n");
+	printf("-----------------------------------------------\n\n");
+	char donee[count];
+	ptr = -1;
+	for(k=0;k<count;k++){
+		for(kay=0;kay<100;kay++){
+			calc_follow[k][kay] = '!';
+		}
+	}
+	point1 = 0;
+	int land = 0;
+	for(e=0;e<count;e++)
+  	{
+		ck=production[e][0];
+		point2 = 0;
+		xxx = 0;
+		for(kay = 0; kay <= ptr; kay++)
+			if(ck == donee[kay])
+				xxx = 1;
+		if (xxx == 1)
+			continue;
+  		land += 1;
+		follow(ck);
+  		ptr+=1;
+		donee[ptr] = ck;
+  		printf(" Follow(%c) = { ",ck);
+  		calc_follow[point1][point2++] = ck;
+  		for(i=0+km;i<m;i++){
+  			int lark = 0,chk = 0;
+  			for(lark=0;lark<point2;lark++){
+  				if (f[i] == calc_follow[point1][lark]){
+  					chk = 1;
+  					break;
+				}
+			}
+			if(chk == 0){
+  		 		printf("%c, ",f[i]);
+  				calc_follow[point1][point2++] = f[i];
+  			}
+  		}
+  		printf(" }\n\n");
+		km=m;
+		point1++; 
+	}
+	char ter[10];
+	for(k=0;k<10;k++){
+		ter[k] = '!';
+	}
+	int ap,vp,sid = 0;
+	for(k=0;k<count;k++){
+		for(kay=0;kay<count;kay++){
+			if(!isupper(production[k][kay]) && production[k][kay]!= '#' && production[k][kay] != '=' && production[k][kay] != '\0'){
+				vp = 0;
+				for(ap = 0;ap < sid; ap++){
+					if(production[k][kay] == ter[ap]){
+						vp = 1;
+						break;
+					}
+				}
+				if(vp == 0){
+					ter[sid] = production[k][kay];
+					sid ++;
+				}
+			}
+		}
+	}
+	ter[sid] = '$';
+	sid++;
+	printf("\n\t\t\t\t\t\t\t The LL(1) Parsing Table for the above grammer :-");
+	printf("\n\t\t\t\t\t\t\t^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+	printf("\n\t\t\t=====================================================================================================================\n");
+	printf("\t\t\t\t|\t");
+	for(ap = 0;ap < sid; ap++){
+		printf("%c\t\t",ter[ap]);
+	}
+	printf("\n\t\t\t=====================================================================================================================\n");
+	char first_prod[count][sid];
+	for(ap=0;ap<count;ap++){
+		int destiny = 0;
+		k = 2;
+		int ct = 0;
+		char tem[100];
+		while(production[ap][k] != '\0'){
+			if(!isupper(production[ap][k])){
+				tem[ct++] = production[ap][k];
+				tem[ct++] = '_';
+				tem[ct++] = '\0';
+				k++;
+				break;
+			}
+			else{
+				int zap=0;
+				int tuna = 0;
+				for(zap=0;zap<count;zap++){
+					if(calc_first[zap][0] == production[ap][k]){
+						for(tuna=1;tuna<100;tuna++){
+							if(calc_first[zap][tuna] != '!'){
+								tem[ct++] = calc_first[zap][tuna];
+							}
+							else
+								break;
+						}
+					break;
+					}
+				}
+				tem[ct++] = '_';
+			}
+			k++;
+		}
+		int zap = 0,tuna;		
+		for(tuna = 0;tuna<ct;tuna++){
+			if(tem[tuna] == '#'){
+				zap = 1;
+			}
+			else if(tem[tuna] == '_'){
+				if(zap == 1){
+					zap = 0;
+				}
+				else
+					break;
+			}
+			else{
+				first_prod[ap][destiny++] = tem[tuna];
+			}
+		}
+	}
+	char table[land][sid+1];
+	ptr = -1;
+	for(ap = 0; ap < land ; ap++){
+		for(kay = 0; kay < (sid + 1) ; kay++){
+			table[ap][kay] = '!';
+		}
+	}
+	for(ap = 0; ap < count ; ap++){
+		ck = production[ap][0];
+		xxx = 0;
+		for(kay = 0; kay <= ptr; kay++)
+			if(ck == table[kay][0])
+				xxx = 1;
+		if (xxx == 1)
+			continue;
+		else{
+			ptr = ptr + 1;
+			table[ptr][0] = ck;
+		}
+	}
+	for(ap = 0; ap < count ; ap++){
+		int tuna = 0;
+		while(first_prod[ap][tuna] != '\0'){
+			int to,ni=0;
+			for(to=0;to<sid;to++){
+				if(first_prod[ap][tuna] == ter[to]){
+					ni = 1;
+				}
+			}
+			if(ni == 1){
+				char xz = production[ap][0];
+				int cz=0;
+				while(table[cz][0] != xz){
+					cz = cz + 1;
+				}
+				int vz=0;
+				while(ter[vz] != first_prod[ap][tuna]){
+					vz = vz + 1;
+				}
+				table[cz][vz+1] = (char)(ap + 65);
+			}
+			tuna++;
+		}
+	}
+	for(k=0;k<sid;k++){
+		for(kay=0;kay<100;kay++){
+			if(calc_first[k][kay] == '!'){
+				break;
+			}
+			else if(calc_first[k][kay] == '#'){
+				int fz = 1;
+				while(calc_follow[k][fz] != '!'){
+					char xz = production[k][0];
+					int cz=0;
+					while(table[cz][0] != xz){
+						cz = cz + 1;
+					}
+					int vz=0;
+					while(ter[vz] != calc_follow[k][fz]){
+						vz = vz + 1;
+					}
+					table[k][vz+1] = '#';
+					fz++;	
+				}
+				break;
+			}
+		}
+	}
+	for(ap = 0; ap < land ; ap++){
+		printf("\t\t\t   %c\t|\t",table[ap][0]);
+		for(kay = 1; kay < (sid + 1) ; kay++){
+			if(table[ap][kay] == '!')
+				printf("\t\t");
+			else if(table[ap][kay] == '#')
+				printf("%c=#\t\t",table[ap][0]);
+			else{
+				int mum = (int)(table[ap][kay]);
+				mum -= 65;
+				printf("%s\t\t",production[mum]);
+			}
+		}
+		printf("\n");
+		printf("\t\t\t---------------------------------------------------------------------------------------------------------------------");
+		printf("\n");
+	}
+	int j;
+	printf("\n\nPlease enter the desired INPUT STRING = ");
+	char input[100];
+	scanf("%s%c",input,&ch);
+	printf("\n\t\t\t\t\t===========================================================================\n");
+	printf("\t\t\t\t\t\tStack\t\t\tInput\t\t\tAction");
+	printf("\n\t\t\t\t\t===========================================================================\n");
+	int i_ptr = 0,s_ptr = 1;
+	char stack[100];
+	stack[0] = '$';
+	stack[1] = table[0][0];
+	while(s_ptr != -1){
+		printf("\t\t\t\t\t\t");
+		int vamp = 0;
+		for(vamp=0;vamp<=s_ptr;vamp++){
+			printf("%c",stack[vamp]);
+		}
+		printf("\t\t\t");
+		vamp = i_ptr;
+		while(input[vamp] != '\0'){
+			printf("%c",input[vamp]);
+			vamp++;
+		}
+		printf("\t\t\t");
+		char her = input[i_ptr];
+		char him = stack[s_ptr];
+		s_ptr--;
+		if(!isupper(him)){
+			if(her == him){
+				i_ptr++;
+				printf("POP ACTION\n");
+			}
+			else{
+				printf("\nString Not Accepted by LL(1) Parser !!\n");
+				exit(0);
+			}
+		}
+		else{
+			for(i=0;i<sid;i++){
+				if(ter[i] == her)
+					break;
+			}
+			char produ[100];
+			for(j=0;j<land;j++){
+				if(him == table[j][0]){
+					if (table[j][i+1] == '#'){
+						printf("%c=#\n",table[j][0]);
+						produ[0] = '#';
+						produ[1] = '\0';
+					}
+					else if(table[j][i+1] != '!'){
+						int mum = (int)(table[j][i+1]);
+						mum -= 65;
+						strcpy(produ,production[mum]);
+						printf("%s\n",produ);
+					}
+					else{
+						printf("\nString Not Accepted by LL(1) Parser !!\n");
+						exit(0);
+					}
+				}
+			}
+			int le = strlen(produ);
+			le = le - 1;
+			if(le == 0){
+				continue;
+			}
+			for(j=le;j>=2;j--){
+				s_ptr++;
+				stack[s_ptr] = produ[j];
+			}
+		}
+	}
+	printf("\n\t\t\t=======================================================================================================================\n");
+	if (input[i_ptr] == '\0'){
+		printf("\t\t\t\t\t\t\t\tYOUR STRING HAS BEEN ACCEPTED !!\n");
+	}
+	else
+		printf("\n\t\t\t\t\t\t\t\tYOUR STRING HAS BEEN REJECTED !!\n");
+	printf("\t\t\t=======================================================================================================================\n");
+}
+
+void follow(char c)
+{
+	int i ,j;
+	if(production[0][0]==c){
+ 		f[m++]='$';
+ 	}
+ 	for(i=0;i<10;i++)
+ 	{
+  		for(j=2;j<10;j++)
+  		{
+   			if(production[i][j]==c)
+   			{
+    			if(production[i][j+1]!='\0'){
+					followfirst(production[i][j+1],i,(j+2));
+ 				}
+    			if(production[i][j+1]=='\0'&&c!=production[i][0]){
+     				follow(production[i][0]);
+				}
+   			}   
+  		}
+ 	}
+}
+
+void findfirst(char c ,int q1 , int q2)
+{
+	int j;
+	if(!(isupper(c))){
+		first[n++]=c;
+	}
+	for(j=0;j<count;j++)
+	{
+		if(production[j][0]==c)
+		{
+			if(production[j][2]=='#'){
+				if(production[q1][q2] == '\0')
+					first[n++]='#';
+				else if(production[q1][q2] != '\0' && (q1 != 0 || q2 != 0))
+				{
+					findfirst(production[q1][q2], q1, (q2+1));
+				}
+				else
+					first[n++]='#';
+			}
+			else if(!isupper(production[j][2])){
+				first[n++]=production[j][2];
+			}
+			else {
+				findfirst(production[j][2], j, 3);
+			}
+		}
+	}	
+}
+
+void followfirst(char c, int c1 , int c2)
+{
+    int k;
+    if(!(isupper(c)))
+		f[m++]=c;
+	else{
+		int i=0,j=1;
+		for(i=0;i<count;i++)
+		{
+			if(calc_first[i][0] == c)
+				break;
+		}
+		while(calc_first[i][j] != '!')
+		{
+			if(calc_first[i][j] != '#'){
+				f[m++] = calc_first[i][j];
+			}
+			else{
+				if(production[c1][c2] == '\0'){
+					follow(production[c1][0]);
+				}
+				else{
+					followfirst(production[c1][c2],c1,c2+1);
+				}
+			}
+			j++;
+		}
+	}
+}
+        </div>
+        <div class="rep">
+#include <stdio.h>
+#include <string.h>
+
+#define SUCCESS 1
+#define FAILED 0
+
+int E(), Edash(), T(), Tdash(), F();
+
+const char *cursor;
+char string[64];
+
+int main()
+{
+	puts("Enter the string");
+	// scanf("%s", string);
+	sscanf("i+(i+i)*i", "%s", string);
+	cursor = string;
+	puts("");
+	puts("Input		 Action");
+	puts("--------------------------------");
+
+	if (E() && *cursor == '\0') {
+		puts("--------------------------------");
+		puts("String is successfully parsed");
+		return 0;
+	} else {
+		puts("--------------------------------");
+		puts("Error in parsing String");
+		return 1;
+	}
+}
+
+int E()
+{
+	printf("%-16s E -> T E'\n", cursor);
+	if (T()) {
+		if (Edash())
+			return SUCCESS;
+		else
+			return FAILED;
+	} else
+		return FAILED;
+}
+
+int Edash()
+{
+	if (*cursor == '+') {
+		printf("%-16s E' -> + T E'\n", cursor);
+		cursor++;
+		if (T()) {
+			if (Edash())
+				return SUCCESS;
+			else
+				return FAILED;
+		} else
+			return FAILED;
+	} else {
+		printf("%-16s E' -> $\n", cursor);
+		return SUCCESS;
+	}
+}
+
+int T()
+{
+	printf("%-16s T -> F T'\n", cursor);
+	if (F()) {
+		if (Tdash())
+			return SUCCESS;
+		else
+			return FAILED;
+	} else
+		return FAILED;
+}
+
+int Tdash()
+{
+	if (*cursor == '*') {
+		printf("%-16s T' -> * F T'\n", cursor);
+		cursor++;
+		if (F()) {
+			if (Tdash())
+				return SUCCESS;
+			else
+				return FAILED;
+		} else
+			return FAILED;
+	} else {
+		printf("%-16s T' -> $\n", cursor);
+		return SUCCESS;
+	}
+}
+
+int F()
+{
+	if (*cursor == '(') {
+		printf("%-16s F -> ( E )\n", cursor);
+		cursor++;
+		if (E()) {
+			if (*cursor == ')') {
+				cursor++;
+				return SUCCESS;
+			} else
+				return FAILED;
+		} else
+			return FAILED;
+	} else if (*cursor == 'i') {
+		cursor++;
+		printf("%-16s F -> i\n", cursor);
+		return SUCCESS;
+	} else
+		return FAILED;
+}
+
+        </div class="lalr">
+        <parser.l>
+%{
+#include<stdio.h>
+#include "y.tab.h"
+%}
+%%
+[0-9]+ {yylval.dval=atof(yytext);
+return DIGIT;
+}
+\n|. return yytext[0];
+%%
+
+
+Related:Compiler Design Program to Design LALR Bottom up Parser
+<parser.y>
+%{
+/*This YACC specification file generates the LALR parser for the program
+considered in experiment 4.*/
+#include<stdio.h>
+%}
+%union
+{
+double dval;
+}
+%token <dval> DIGIT
+%type <dval> expr
+%type <dval> term
+%type <dval> factor
+%%
+line: expr '\n' {
+printf("%g\n",$1);
+}
+;
+expr: expr '+' term {$$=$1 + $3 ;}
+| term
+;
+term: term '*' factor {$$=$1 * $3 ;}
+| factor
+;
+factor: '(' expr ')' {$$=$2 ;}
+| DIGIT
+;
+%%
+int main()
+{
+yyparse();
+}
+yyerror(char *s)
+{
+printf("%s",s);
+}
+        <div >
+            <div class="operator">
+#include<stdio.h>
+#include<string.h>
+
+char *input;
+int i=0;
+char lasthandle[6],stack[50],handles[][5]={")E(","E*E","E+E","i","E^E"};
+//(E) becomes )E( when pushed to stack
+
+int top=0,l;
+char prec[9][9]={
+
+                            /*input*/
+
+            /*stack    +    -   *   /   ^   i   (   )   $  */
+
+            /*  + */  '>', '>','<','<','<','<','<','>','>',
+
+            /*  - */  '>', '>','<','<','<','<','<','>','>',
+
+            /*  * */  '>', '>','>','>','<','<','<','>','>',
+
+            /*  / */  '>', '>','>','>','<','<','<','>','>',
+
+            /*  ^ */  '>', '>','>','>','<','<','<','>','>',
+
+            /*  i */  '>', '>','>','>','>','e','e','>','>',
+
+            /*  ( */  '<', '<','<','<','<','<','<','>','e',
+
+            /*  ) */  '>', '>','>','>','>','e','e','>','>',
+
+            /*  $ */  '<', '<','<','<','<','<','<','<','>',
+
+                };
+
+int getindex(char c)
+{
+switch(c)
+    {
+    case '+':return 0;
+    case '-':return 1;
+    case '*':return 2;
+    case '/':return 3;
+    case '^':return 4;
+    case 'i':return 5;
+    case '(':return 6;
+    case ')':return 7;
+    case '$':return 8;
+    }
+}
+
+
+int shift()
+{
+stack[++top]=*(input+i++);
+stack[top+1]='\0';
+}
+
+
+int reduce()
+{
+int i,len,found,t;
+for(i=0;i<5;i++)//selecting handles
+    {
+    len=strlen(handles[i]);
+    if(stack[top]==handles[i][0]&&top+1>=len)
+        {
+        found=1;
+        for(t=0;t<len;t++)
+            {
+            if(stack[top-t]!=handles[i][t])
+                {
+                found=0;
+                break;
+                }
+            }
+        if(found==1)
+            {
+            stack[top-t+1]='E';
+            top=top-t+1;
+            strcpy(lasthandle,handles[i]);
+            stack[top+1]='\0';
+            return 1;//successful reduction
+            }
+        }
+   }
+return 0;
+}
+
+
+
+void dispstack()
+{
+int j;
+for(j=0;j<=top;j++)
+    printf("%c",stack[j]);
+}
+
+
+
+void dispinput()
+{
+int j;
+for(j=i;j<l;j++)
+    printf("%c",*(input+j));
+}
+
+
+
+void main()
+{
+int j;
+
+input=(char*)malloc(50*sizeof(char));
+printf("\nEnter the string\n");
+scanf("%s",input);
+input=strcat(input,"$");
+l=strlen(input);
+strcpy(stack,"$");
+printf("\nSTACK\tINPUT\tACTION");
+while(i<=l)
+	{
+	shift();
+	printf("\n");
+	dispstack();
+	printf("\t");
+	dispinput();
+	printf("\tShift");
+	if(prec[getindex(stack[top])][getindex(input[i])]=='>')
+		{
+		while(reduce())
+			{
+			printf("\n");
+			dispstack();
+			printf("\t");
+			dispinput();
+			printf("\tReduced: E->%s",lasthandle);
+			}
+		}
+	}
+
+if(strcmp(stack,"$E$")==0)
+    printf("\nAccepted;");
+else
+    printf("\nNot Accepted;");
+}
+            </div>
+            <div class="syntax tree">
+
+            </div>
+        </div>
+    </div>
+    <div class="editor" id="editor"></div>
+    
+<!-- <div>hi</div> -->
+    <div class="button-container">
+        <button class="btn" onclick="executeCode()"> Run </button>
+    </div>
+
+    <div class="output"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/lib/ace.js"></script>
+    <script src="js/lib/theme-monokai.js"></script>
+    <script src="js/ide.js"></script>
+
+</body>
+</html>
